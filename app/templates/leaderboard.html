@@ -1,0 +1,31 @@
+{% extends "index.html" %}
+
+{% block content %}
+<ul class="results">
+{% for player in leaderboard %}
+        <li class="results__result">
+                <span class="results__nickname">{{ player.name }}</span>
+                {% if player.guesses == 7 %}
+                <span class="results__score">0</span>
+                {% else %}
+                <span class="results__score">{{ player.guesses }}</span>
+                {% endif %}
+                <div class="results__pattern grid">
+                        {% if player.grid != '' %}
+                            {% for row in player.grid %}
+                                {% for square in row %}
+                                        {% if square == '2'  %}
+                                        <div class="grid__cell grid__cell--correct"></div>
+                                        {% elif square == '1' %}
+                                        <div class="grid__cell grid__cell--present"></div>
+                                        {% else %}
+                                        <div class="grid__cell grid__cell--absent"></div>
+                                        {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        {% endif %}
+                </div>
+        </li>
+{% endfor %}
+</ul>
+{% endblock %}

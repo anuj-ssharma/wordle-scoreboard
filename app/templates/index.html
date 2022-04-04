@@ -1,0 +1,34 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0, initial-scale=1.0, user-scalable=no">
+  <title>ANSO Wordle Leaderboard</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/reset.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="cookies-enabled">
+  <main>
+    <header class="centered">
+      <h1>ANSO Wordle Leaderboard</h1>
+      <p class="subtitle"><span class=""></span>#{{today}} <a href="https://www.nytimes.com/games/wordle/index.html" target="_blank" rel="nofollow">Play Wordle</a></p>
+    </header>
+    {% if msg %}
+    <h3> {{ msg }} </h3>
+    {% endif %}
+    <section class="cookies-enabled-only">
+       {% block content %}{% endblock %}
+      <form class="container centered" method="post" action="/submit_results">
+                  <input type="text" name="player_name" placeholder="Name" required="">
+                <textarea name="results" rows="8" placeholder="Paste your result" required=""></textarea>
+        <button class="button">Share Result</button>
+      </form>
+          </section>
+    <section class="cookies-disabled-only">
+      <p>Please enable cookies to use this site.</p>
+    </section>
+    <footer class="small muted centered">
+      Anuj Sharma
+    </footer>
+  </main>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body></html>

@@ -25,7 +25,7 @@ def submit_results():
     user_results = request.form['results']
     player_result = PlayerResults(request.form['player_name'])
     if player_result.parse(user_results) and player_result.save_result():
-        return redirect(url_for('leaderboard'))
+        return redirect(url_for('index'))
     return redirect(url_for('failure'))
 
 

@@ -16,7 +16,33 @@
     <h3> {{ msg }} </h3>
     {% endif %}
     <section class="cookies-enabled-only">
-       {% block content %}{% endblock %}
+       <ul class="results">
+{% for player in leaderboard %}
+        <li class="results__result">
+                <span class="results__nickname">{{ player.name }}</span>
+                {% if player.guesses == 7 %}
+                <span class="results__score">0</span>
+                {% else %}
+                <span class="results__score">{{ player.guesses }}</span>
+                {% endif %}
+                <div class="results__pattern grid">
+                        {% if player.grid != '' %}
+                            {% for row in player.grid %}
+                                {% for square in row %}
+                                        {% if square == '2'  %}
+                                        <div class="grid__cell grid__cell--correct"></div>
+                                        {% elif square == '1' %}
+                                        <div class="grid__cell grid__cell--present"></div>
+                                        {% else %}
+                                        <div class="grid__cell grid__cell--absent"></div>
+                                        {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        {% endif %}
+                </div>
+        </li>
+{% endfor %}
+</ul>
       <form class="container centered" method="post" action="/submit_results">
                   <input type="text" name="player_name" placeholder="Name" required="">
                 <textarea name="results" rows="8" placeholder="Paste your result" required=""></textarea>

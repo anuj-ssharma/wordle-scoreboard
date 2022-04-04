@@ -15,7 +15,9 @@ class Leaderboard:
         today_results_unsolved = db.session.query(Results).filter(Results.wordle_number == str(self.today),
                                                                   Results.solved == False)
         today_leaderboard_results = today_results_solved.order_by(Results.guesses)
+
         leaderboard = []
+
         for player in today_leaderboard_results.all():
             formatted_grid = []
             for row in json.loads(player.grid):
@@ -24,8 +26,10 @@ class Leaderboard:
                 row = row.replace('🟨', str(1))
                 formatted_grid.append(row)
             leaderboard.append({'name': player.player_name, 'guesses': player.guesses, 'grid': formatted_grid})
+
         for player in today_results_unsolved.all():
             leaderboard.append({'name': player.player_name, 'guesses': player.guesses, 'grid': ''})
+
         return leaderboard
 
     def all_time_leaderboard(self):
@@ -39,8 +43,7 @@ class Leaderboard:
                 if result.guesses != 0:
                     score += result.guesses
                     total_results += 1
-            avg_score = score/total_results
+            avg_score = score / total_results
 
             alltime_leaderboard.update({player: "{:.2f}".format(avg_score)})
         return {k: v for k, v in sorted(alltime_leaderboard.items(), key=lambda item: item[1])}
-        # return alltime_leaderboard

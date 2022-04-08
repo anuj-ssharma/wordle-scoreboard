@@ -16,18 +16,18 @@ class PlayerResults:
     def parse(self, copied_result):
         player_result = copied_result.split('\r\n')
         self.wordle_number = player_result[0].split()[1]
-        wordle_score = player_result[0].split()[2]
-
-        if is_solved(wordle_score):
-            self.solved = True
-            rows = player_result[2:]
-            self.solved_in_rows = len(rows)
-            self.grid = player_result[2:]
-
         if self.wordle_number is not None:
+            score = player_result[0].split()[2]
+            if is_solved(score):
+                self.solved = True
+                self.solved_in_rows = len(player_result[2:])
+            self.grid = player_result[2:]
             return True
         else:
             return False
+
+
+
 
     def save_result(self):
         if self.wordle_number is not None:

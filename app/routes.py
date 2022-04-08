@@ -8,12 +8,10 @@ from app.leaderboard import Leaderboard
 from app.playerresults import PlayerResults
 from datetime import date
 
-today = 196 + (date.today() - date(2022, 1, 1)).days
-
 
 @app.route("/")
-@app.route("/index")
 def index():
+    today = 196 + (date.today() - date(2022, 1, 1)).days
     leaderboard_results = Leaderboard().today_leaderboard()
     return render_template('index.html',
                            today=today,
@@ -25,7 +23,7 @@ def submit_results():
     user_results = request.form['results']
     player_result = PlayerResults(request.form['player_name'])
     if player_result.parse(user_results) and player_result.save_result():
-        return redirect(url_for('index'))
+        return redirect(url_for('/'))
     return redirect(url_for('failure'))
 
 

@@ -10,9 +10,10 @@ class Leaderboard:
         self.today = 196 + (date.today() - date(2022, 1, 1)).days
 
     def today_leaderboard(self):
-        today_results_solved = db.session.query(Results).filter(Results.wordle_number == str(self.today),
+        today = 196 + (date.today() - date(2022, 1, 1)).days
+        today_results_solved = db.session.query(Results).filter(Results.wordle_number == str(today),
                                                                 Results.solved == True)
-        today_results_unsolved = db.session.query(Results).filter(Results.wordle_number == str(self.today),
+        today_results_unsolved = db.session.query(Results).filter(Results.wordle_number == str(today),
                                                                   Results.solved == False)
         today_leaderboard_results = today_results_solved.order_by(Results.guesses)
 
@@ -28,7 +29,7 @@ class Leaderboard:
             leaderboard.append({'name': player.player_name, 'guesses': player.guesses, 'grid': formatted_grid})
 
         for player in today_results_unsolved.all():
-            leaderboard.append({'name': player.player_name, 'guesses': player.guesses, 'grid': ''})
+            leaderboard.append({'name': player.player_name, 'guesses': player.guesses, 'grid': formatted_grid})
 
         return leaderboard
 
@@ -37,13 +38,23 @@ class Leaderboard:
         alltime_leaderboard = {}
         for player in players:
             results = db.session.query(Results).filter_by(player_name=player)
-            total_results = 0
+            total_solved = 0
+            total_unsolved = 0
+            total_results = results.count()
             score = 0
             for result in results:
                 if result.guesses != 0:
                     score += result.guesses
-                    total_results += 1
-            avg_score = score / total_results
+                    total_solved += 1
+            avg_score = float("{:.2f}".format(score / total_solved))
+            total_unsolved = total_results - total_solved
+            alltime_leaderboard.update({player: {}})
+            player_result = {"score": avg_score,
+                             "total_played": total_results,
+                             "total_solved": total_solved,
+                             "total_unsolved": total_unsolved}
+            alltime_leaderboard.update({player: player_result})
 
-            alltime_leaderboard.update({player: "{:.2f}".format(avg_score)})
-        return {k: v for k, v in sorted(alltime_leaderboard.items(), key=lambda item: item[1])}
+        return alltime_leaderboard
+        # return flask.jsonify(alltime_leaderboard)
+        # return {k: v for k, v in sorted(alltime_leaderboard.items(), key=lambda item: item[1])}
